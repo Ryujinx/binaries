@@ -1,0 +1,27 @@
+name: Release metadata
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Checkout"
+      uses: actions/checkout@v2
+
+    - name: "Handle release event"
+      run: python3 update_release.py
+
+    - name: Commit files
+      run: |
+        git config --local user.email "61127645+RyujinxBot@users.noreply.github.com"
+        git config --local user.name "RyujinxBot"
+        git add .
+        git commit -m "Update release metadata" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
